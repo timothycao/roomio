@@ -7,6 +7,7 @@
 1. **Login & User Session Handle:** Users should be able to **register a new account**. Besides, only registered users are allowed to **log in** to the website. Roomio should add salt to the hashed password whenever a password is required at the database level. On login, if the salted and hashed password matches the record in the database, the user should then be redirected to the main page. If not, the user should be informed of the failure and no session will be created. The application should support **user sessions**, storing relevant data on a successful login.
 
 2. **Search Certain Apartment Units:** The user should be able to search certain apartment units based on the following options:
+
    - Given the exact building name and company name, the application should return a list of units for rent and their basic information (monthly rent, square footage, available date for move-in, xbxb etc.)
    - Based on the registered information of the user's pet, the system shows whether the pet is allowed.
 
@@ -35,3 +36,7 @@
 13. **Comment System:** The user can leave a comment and rating for certain units.
 
 14. **Join Interest:** The user can join a certain interest group.
+
+### ER Diagram:
+
+![ER Diagram](er_diagram.png)
