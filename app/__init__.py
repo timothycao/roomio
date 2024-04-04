@@ -1,5 +1,6 @@
 from flask import Flask
 import pymysql
+from pymysql.constants import CLIENT
 import os
 from dotenv import load_dotenv
 
@@ -17,8 +18,17 @@ conn = pymysql.connect(
     password=os.getenv('DB_PASSWORD'),
     db=os.getenv('DB_NAME'),
     charset='utf8mb4',
-    cursorclass=pymysql.cursors.DictCursor
+    cursorclass=pymysql.cursors.DictCursor,
+    client_flag=CLIENT.MULTI_STATEMENTS     # allows execution of multiple sql statements (for schema)
 )
+
+# Execute schema.sql
+schema = os.path.join(os.path.dirname(__file__), '..', 'schema.sql')
+with open(schema, 'r') as f:
+    schema_script = f.read()
+
+with conn.cursor() as cursor:
+    cursor.execute(schema_script)
 
 # Import routes
 from . import routes
