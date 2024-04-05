@@ -5,24 +5,24 @@
   <body>
     <form action="register" method="POST">
       <label for="username">Username:</label><br />
-      <input type="text" id="username" name="username" required /><br />
+      <input type="text" id="username" name="username" value="{{ form_data.get('username', '') }}" required /><br />
       <label for="first_name">First Name:</label><br />
-      <input type="text" id="first_name" name="first_name" required /><br />
+      <input type="text" id="first_name" name="first_name" value="{{ form_data.get('first_name', '') }}" required /><br />
       <label for="last_name">Last Name:</label><br />
-      <input type="text" id="last_name" name="last_name" required /><br />
+      <input type="text" id="last_name" name="last_name" value="{{ form_data.get('last_name', '') }}" required /><br />
       <label for="date_of_birth">Date of Birth:</label><br />
-      <input type="date" id="date_of_birth" name="date_of_birth" required /><br />
+      <input type="date" id="date_of_birth" name="date_of_birth" value="{{ form_data.get('date_of_birth', '') }}" required /><br />
       <label for="gender">Gender:</label><br />
       <select id="gender" name="gender" required>
         <option value="" disabled selected>Please select</option>
-        <option id="male" value="0">Male</option>
-        <option id="female" value="1">Female</option>
+        <option id="male" value="0" {% if form_data.get('gender', '') == '0' %} selected {% endif %}>Male</option>
+        <option id="female" value="1" {% if form_data.get('gender', '') == '1' %} selected {% endif %}>Female</option>
       </select>
       <br />
 	  <label for="email_address">Email Address:</label><br />
-	  <input type="email" id="email_address" name="email_address" required /><br />
+	  <input type="email" id="email_address" name="email_address" value="{{ form_data.get('email_address', '') }}" required /><br />
 	  <label for="phone_number">Phone Number:</label><br />
-	  <input type="text" id="phone_number" name="phone_number" required /><br />
+	  <input type="text" id="phone_number" name="phone_number" value="{{ form_data.get('phone_number', '') }}" required /><br />
       <label for="password">Password:</label><br />
       <input type="password" id="password" name="password" required /><br />
       <input type="submit" value="Register" />

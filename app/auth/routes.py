@@ -8,7 +8,7 @@ def login():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'GET':
-        return render_template('register.html')
+        return render_template('register.html', form_data={})
     
     elif request.method == 'POST':
         username = request.form['username']
@@ -28,7 +28,7 @@ def register():
 
         if data:
             error = "This username is already taken"
-            return render_template('register.html', error = error)
+            return render_template('register.html', error = error, form_data=request.form)
         else:
             insert_user_query = 'INSERT INTO User (username, first_name, last_name, date_of_birth, gender, password) VALUES (%s, %s, %s, %s, %s, %s)'
             cursor.execute(insert_user_query, (username, first_name, last_name, date_of_birth, gender, password))
