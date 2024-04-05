@@ -4,7 +4,7 @@ from flask import request, render_template, redirect, url_for, session
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'GET':
-        return render_template('login.html')
+        return render_template('login.html', form_data={})
     
     elif request.method == 'POST':
         username = request.form['username']
@@ -24,7 +24,7 @@ def login():
             # return redirect(url_for('home'))
         else:
             error = 'Invalid username and/or password'
-            return render_template('login.html', error=error)
+            return render_template('login.html', error=error, form_data=request.form)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
