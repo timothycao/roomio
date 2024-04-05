@@ -10,6 +10,9 @@ load_dotenv()
 # Initialize Flask app
 app = Flask(__name__)
 
+# Set secret key for security and session management
+app.secret_key = os.getenv('FLASK_SECRET_KEY')
+
 # Configure MySQL connection
 conn = pymysql.connect(
     host=os.getenv('DB_HOST'),

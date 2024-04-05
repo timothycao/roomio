@@ -1,9 +1,30 @@
 from app import app, conn
-from flask import request, render_template
+from flask import request, render_template, redirect, url_for, session
 
-@app.route('/login')
+@app.route('/login', methods=['GET', 'POST'])
 def login():
-    return render_template('login.html')
+    if request.method == 'GET':
+        return render_template('login.html')
+    
+    elif request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+
+        cursor = conn.cursor()
+
+        query = 'SELECT * FROM User WHERE username = %s and password = %s'
+        cursor.execute(query, (username, password))
+        data = cursor.fetchone()
+
+        cursor.close()
+
+        if(data):
+            session['username'] = username
+            return render_template('home.html') # placeholder: to be deleted once home route is defined
+            # return redirect(url_for('home'))
+        else:
+            error = 'Invalid username and/or password'
+            return render_template('login.html', error=error)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -43,4 +64,4 @@ def register():
 
             cursor.close()
 
-            return render_template('login.html')
+            return redirect(url_for('login'))
