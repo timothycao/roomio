@@ -1,4 +1,5 @@
 from app import app, conn
+from app.auth import bcrypt
 from flask import request, render_template, redirect, url_for, session
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -12,13 +13,13 @@ def login():
 
         cursor = conn.cursor()
 
-        query = 'SELECT * FROM User WHERE username = %s and password = %s'
-        cursor.execute(query, (username, password))
+        query = 'SELECT * FROM User WHERE username = %s'
+        cursor.execute(query, (username))
         data = cursor.fetchone()
 
         cursor.close()
 
-        if(data):
+        if data and bcrypt.check_password_hash(data['password'], password):
             session['username'] = username
             return render_template('home.html') # placeholder: to be deleted once home route is defined
             # return redirect(url_for('home'))
@@ -41,6 +42,9 @@ def register():
         phone_number = request.form['phone_number']
         password = request.form['password']
 
+        # Salt and hash the password
+        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+
         cursor = conn.cursor()
 
         query = 'SELECT * FROM User WHERE username = %s'
@@ -52,7 +56,7 @@ def register():
             return render_template('register.html', error = error, form_data=request.form)
         else:
             insert_user_query = 'INSERT INTO User (username, first_name, last_name, date_of_birth, gender, password) VALUES (%s, %s, %s, %s, %s, %s)'
-            cursor.execute(insert_user_query, (username, first_name, last_name, date_of_birth, gender, password))
+            cursor.execute(insert_user_query, (username, first_name, last_name, date_of_birth, gender, hashed_password))
 
             insert_email_query = 'INSERT INTO UserEmail (email_address, username) VALUES (%s, %s)'
             cursor.execute(insert_email_query, (email_address, username))
