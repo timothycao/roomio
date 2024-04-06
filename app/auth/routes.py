@@ -1,5 +1,4 @@
-from app import app, conn
-from app.auth import bcrypt
+from app.auth import app, conn, bcrypt
 from flask import request, render_template, redirect, url_for, session
 
 @app.route('/login', methods=['GET', 'POST'])
