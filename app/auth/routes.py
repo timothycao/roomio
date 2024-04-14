@@ -1,7 +1,8 @@
-from . import conn, bcrypt, auth
+from . import conn, bcrypt, auth, decorators
 from flask import request, render_template, redirect, url_for, session
 
 @auth.route('/login', methods=['GET', 'POST'])
+@decorators.guest_required
 def login():
     if request.method == 'GET':
         return render_template('login.html', form_data={})
@@ -27,6 +28,7 @@ def login():
             return render_template('login.html', error=error, form_data=request.form)
 
 @auth.route('/register', methods=['GET', 'POST'])
+@decorators.guest_required
 def register():
     if request.method == 'GET':
         return render_template('register.html', form_data={})

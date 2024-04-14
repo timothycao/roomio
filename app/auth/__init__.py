@@ -9,3 +9,5 @@ auth = Blueprint('auth', __name__)
 
 # Import routes
 from . import routes
+
+from . import decorators
