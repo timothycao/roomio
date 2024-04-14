@@ -1,7 +1,7 @@
-from app.auth import app, conn, bcrypt
+from . import conn, bcrypt, auth
 from flask import request, render_template, redirect, url_for, session
 
-@app.route('/login', methods=['GET', 'POST'])
+@auth.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'GET':
         return render_template('login.html', form_data={})
@@ -26,7 +26,7 @@ def login():
             error = 'Invalid username and/or password'
             return render_template('login.html', error=error, form_data=request.form)
 
-@app.route('/register', methods=['GET', 'POST'])
+@auth.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'GET':
         return render_template('register.html', form_data={})
@@ -67,4 +67,10 @@ def register():
 
             cursor.close()
 
-            return redirect(url_for('login'))
+            return redirect(url_for('auth.login'))
+
+@auth.route('/logout')
+def logout():
+    session.clear()
+    
+    return redirect(url_for('auth.login'))
