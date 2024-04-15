@@ -1,0 +1,22 @@
+<html>
+  <head>
+    Pets
+  </head>
+  <body>
+    <table>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Size</th>
+      {% for pet in pets %}
+      <tr>
+        <td>{{ pet.pet_name }}</td>
+        <td>{{ pet.pet_type }}</td>
+        <td>{{ pet.pet_size }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+    <a href="{{ url_for('pets.register') }}">
+      <button>Register a pet</button>
+    </a>
+  </body>
+</html>
