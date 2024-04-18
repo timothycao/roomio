@@ -1,0 +1,20 @@
+<html>
+  <head>
+    Update Pet
+  </head>
+  <body>
+    <form action="{{ url_for('pets.update', pet_name=pet.pet_name, pet_type=pet.pet_type) }}" method="POST">
+      <label for="pet_name">Pet Name:</label><br />
+      <input type="text" id="pet_name" name="pet_name" value="{{ form_data.pet_name | default(pet.pet_name) }}" required /><br />
+      <label for="pet_type">Pet Type:</label><br />
+      <input type="text" id="pet_type" name="pet_type" value="{{ form_data.pet_type | default(pet.pet_type) }}" required /><br />
+      <label for="pet_size">Pet Size:</label><br />
+      <input type="text" id="pet_size" name="pet_size" value="{{ form_data.pet_size | default(pet.pet_size) }}" required /><br />
+      <input type="submit" value="Update" />
+      {% if error %}
+      <p class="error"><strong>Error:</strong> {{error}}</p>
+      {% endif %}
+    </form>
+    <a href="{{ url_for('pets.get_one', pet_name=pet.pet_name, pet_type=pet.pet_type) }}">Go back</a>
+  </body>
+</html>

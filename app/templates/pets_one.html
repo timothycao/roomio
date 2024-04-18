@@ -1,0 +1,21 @@
+<html>
+  <head>
+    Pet
+  </head>
+  <body>
+    <form style="margin-bottom: 0;">
+      <label for="pet_name">Pet Name:</label><br />
+      <input type="text" id="pet_name" name="pet_name" value="{{ pet.pet_name }}" disabled /><br />
+      <label for="pet_type">Pet Type:</label><br />
+      <input type="text" id="pet_type" name="pet_type" value="{{ pet.pet_type }}" disabled /><br />
+      <label for="pet_size">Pet Size:</label><br />
+      <input type="text" id="pet_size" name="pet_size" value="{{ pet.pet_size }}" disabled /><br />
+    </form>
+    <a href="{{ url_for('pets.update', pet_name=pet.pet_name, pet_type=pet.pet_type) }}">
+      <button style="margin-top: 0;">Update pet</button>
+    </a>
+  </body>
+  <div style="margin-top: 1em;">
+    <a href="{{ url_for('pets.get_all') }}">Go back</a>
+  </div>
+</html>

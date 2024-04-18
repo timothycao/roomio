@@ -9,7 +9,7 @@
       <th>Size</th>
       {% for pet in pets %}
       <tr>
-        <td>{{ pet.pet_name }}</td>
+        <td><a href="{{ url_for('pets.get_one', pet_name=pet.pet_name, pet_type=pet.pet_type) }}">{{ pet.pet_name }}</a></td>
         <td>{{ pet.pet_type }}</td>
         <td>{{ pet.pet_size }}</td>
       </tr>
