@@ -12,7 +12,7 @@
       <tr>
         <td>{{ building.company_name }}</td>
         <td><a href="{{ url_for('apartment.get_building', company_name=building.company_name, building_name=building.building_name) }}">{{ building.building_name }}</a></td>
-        <td>{{ building.street_number }} {{ building.street_name }}, {{ building.city }}, {{ building.state }} {{ building.zip }}</td>
+        <td>{{ building.street_number }} {{ building.street_name }}, {{ building.city }}, {{ building.state }} {{ building.zip_code }}</td>
         <td>{{ building.year_built }}</td>
       </tr>
       {% endfor %}

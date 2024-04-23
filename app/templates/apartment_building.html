@@ -1,0 +1,58 @@
+<html>
+  <head>
+    <title>{{ building.building_name }}</title>
+  </head>
+  <body>
+    <h1 style="margin-bottom: 0;">{{ building.building_name }}</h1>
+    <h3 style="margin-top: 0;">{{ building.street_number }} {{ building.street_name }}, {{ building.city }}, {{ building.state }} {{ building.zip_code }}</h3>
+    <h2>Building Facts</h2>
+    <div>Built in {{ building.year_built }}</div>
+    <div>Company: {{ building.company_name }}</div>
+    <h2>Amenities</h2>
+    <table>
+      <th>Amenity</th>
+      <th>Description</th>
+      {% for amenity in amenities %}
+        <tr>
+          <td>{{ amenity.amenity_name }}</td>
+          <td>{{ amenity.amenity_description }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+    <h2>Pet Policies</h2>
+    <table>
+      <th>Type</th>
+      <th>Size</th>
+      <th>Allowed</th>
+      <th>Registration Fee</th>
+      <th>Monthly Fee</th>
+      {% for pet_policy in pet_policies %}
+      <tr>
+        <td>{{ pet_policy.pet_type }}</td>
+        <td>{{ pet_policy.pet_size }}</td>
+        <td>{{ 'Yes' if pet_policy.is_pet_allowed else 'No' }}</td>
+        <td>{{ pet_policy.pet_registration_fee }}</td>
+        <td>{{ pet_policy.pet_monthly_fee }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+    <h2>Units</h2>
+    <table>
+      <th>Unit</th>
+      <th>Rent</th>
+      <th>Size</th>
+      <th>Available Date</th>
+      {% for unit in units %}
+        <tr>
+          <td><a href="{{ url_for('apartment.get_unit', unit_id=unit.unit_id) }}">{{ unit.unit_number }}</a></td>
+          <td>${{ unit.monthly_rent }} </td>
+          <td>{{ unit.unit_size }} ft²</td>
+          <td>{{ unit.available_date }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+  </body>
+  <div style="margin-top: 1em;">
+    <a href="{{ url_for('apartment.get_buildings') }}">Go back</a>
+  </div>
+</html>
