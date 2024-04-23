@@ -1,0 +1,69 @@
+<html>
+  <head>
+    <title>{{ unit.street_number }} {{ unit.street_name }} #{{ unit.unit_number }}</title>
+  </head>
+  <body>
+    <h1>{{ unit.street_number }} {{ unit.street_name }} #{{ unit.unit_number }}</h1>
+    <h2>About the Building</h2>
+    <div><a href="{{ url_for('apartment.get_building', company_name=unit.company_name, building_name=unit.building_name) }}">{{ unit.building_name }}</a></div>
+    <div>{{ unit.street_number }} {{ unit.street_name }}, {{ unit.city }}, {{ unit.state }} {{ unit.zip_code }}</div>
+    <div>Built in {{ unit.year_built }}</div>
+    <div>Company: {{ unit.company_name }}</div>
+    <h2>Amenities</h2>
+    <h3>Unit Amenities</h3>
+    <table>
+      <th>Amenity</th>
+      <th>Description</th>
+      {% for unit_amenity in unit_amenities %}
+        <tr>
+          <td>{{ unit_amenity.amenity_name }}</td>
+          <td>{{ unit_amenity.amenity_description }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+    <h3>Building Amenities</h3>
+    <table>
+      <th>Amenity</th>
+      <th>Description</th>
+      {% for building_amenity in building_amenities %}
+        <tr>
+          <td>{{ building_amenity.amenity_name }}</td>
+          <td>{{ building_amenity.amenity_description }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+    <h2>Pet Policies</h2>
+    <table>
+      <th>Type</th>
+      <th>Size</th>
+      <th>Allowed</th>
+      <th>Registration Fee</th>
+      <th>Monthly Fee</th>
+      {% for pet_policy in pet_policies %}
+      <tr>
+        <td>{{ pet_policy.pet_type }}</td>
+        <td>{{ pet_policy.pet_size }}</td>
+        <td>{{ 'Yes' if pet_policy.is_pet_allowed else 'No' }}</td>
+        <td>{{ pet_policy.pet_registration_fee }}</td>
+        <td>{{ pet_policy.pet_monthly_fee }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+    <h2>Rooms</h2>
+    <table>
+      <th>Room</th>
+      <th>Size</th>
+      <th>Description</th>
+      {% for room in rooms %}
+        <tr>
+          <td>{{ room.room_name }}</td>
+          <td>{{ room.room_size }} ft²</td>
+          <td>{{ room.room_description }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+  </body>
+  <div style="margin-top: 1em;">
+    <a href="{{ url_for('apartment.get_units') }}">Go back</a>
+  </div>
+</html>
