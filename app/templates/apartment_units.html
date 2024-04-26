@@ -41,6 +41,9 @@
       <th>Monthly Rent</th>
       <th>Unit Size</th>
       <th>Available Date</th>
+      {% if pet_count > 0 %}
+      <th>Pet Policy</th>
+      {% endif %}
       {% for unit in units %}
       <tr>
         <td><a href="{{ url_for('apartment.get_building', company_name=unit.company_name, building_name=unit.building_name) }}">{{ unit.building_name }}</a></td>
@@ -48,6 +51,13 @@
         <td>${{ unit.monthly_rent }}</td>
         <td>{{ unit.unit_size }} ft²</td>
         <td>{{ unit.available_date }}</td>
+        {% if pet_count > 0 %}
+        <td>
+          {% for i in range(pet_count) %}
+            {{ unit['pp' + (i|string) + '_pet_size'] }} {{ unit['pp' + (i|string) + '_pet_type'] }}s {{ 'allowed' if unit['pp' + (i|string) + '_is_pet_allowed'] else 'not allowed' }}<br>
+          {% endfor %}
+        </td>
+        {% endif %}
       </tr>
       {% endfor %}
     </table>

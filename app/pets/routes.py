@@ -44,6 +44,11 @@ def get_all():
     query = 'SELECT * FROM Pet WHERE username = %s'
     cursor.execute(query, (username))
     pets = cursor.fetchall()
+
+    # update session
+    # pets.register is redirected here, so this also ensures session is updated after each pet registration
+    if pets:
+        session['pets'] = pets
     
     cursor.close()
     

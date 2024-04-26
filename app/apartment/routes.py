@@ -1,5 +1,5 @@
 from . import conn, apartment
-from flask import request, render_template
+from flask import request, render_template, session
 
 @apartment.route('/buildings', methods=['GET'])
 def get_buildings():
@@ -78,10 +78,20 @@ def get_building(company_name, building_name):
 def get_units():
     cursor = conn.cursor()
 
-    query = 'SELECT * FROM ApartmentUnit'
-
+    select_clause = (
+        'SELECT au.company_name AS company_name, '
+        'au.building_name AS building_name, '
+        'au.unit_id AS unit_id, '
+        'au.unit_number AS unit_number, '
+        'au.monthly_rent AS monthly_rent, '
+        'au.unit_size AS unit_size, '
+        'au.available_date AS available_date'
+    )
+    from_clause = ' FROM ApartmentUnit AS au'
     conditions = []
     params = []
+
+    pet_count = 0
 
     if request.args:
         # unit attributes
@@ -93,27 +103,27 @@ def get_units():
         building_name = request.args.get('building_name')
 
         if min_monthly_rent:
-            conditions.append('monthly_rent >= %s')
+            conditions.append('au.monthly_rent >= %s')
             params.append(min_monthly_rent)
         
         if max_monthly_rent:
-            conditions.append('monthly_rent <= %s')
+            conditions.append('au.monthly_rent <= %s')
             params.append(max_monthly_rent)
         
         if min_unit_size:
-            conditions.append('unit_size >= %s')
+            conditions.append('au.unit_size >= %s')
             params.append(min_unit_size)
         
         if available_date:
-            conditions.append('available_date = %s')
+            conditions.append('au.available_date = %s')
             params.append(available_date)
         
         if company_name:
-            conditions.append('company_name LIKE %s')
+            conditions.append('au.company_name LIKE %s')
             params.append(f'%{company_name}%')
         
         if building_name:
-            conditions.append('building_name LIKE %s')
+            conditions.append('au.building_name LIKE %s')
             params.append(f'%{building_name}%')
         
         # building attributes
@@ -122,29 +132,47 @@ def get_units():
         zip_code = request.args.get('zip_code')
 
         if any([city, state, zip_code]):    # ApartmentUnit already contains company_name and building_name
-            query += ' NATURAL JOIN ApartmentBuilding'
+            select_clause += ', ab.city AS city, ab.state AS state, ab.zip_code AS zip_code'
+            from_clause += ' NATURAL JOIN ApartmentBuilding AS ab'
             
             if city:
-                conditions.append('city = %s')
+                conditions.append('ab.city = %s')
                 params.append(city)
             
             if state:
-                conditions.append('state = %s')
+                conditions.append('ab.state = %s')
                 params.append(state)
             
             if zip_code:
-                conditions.append('zip_code = %s')
+                conditions.append('ab.zip_code = %s')
                 params.append(zip_code)
+        
+        if 'username' in session and 'pets' in session:
+            pet_count = len(session['pets'])
+            pet_conditions = []
+            for i, pet in enumerate(session['pets']):
+                select_clause += f', pp{i}.pet_type AS pp{i}_pet_type, pp{i}.pet_size AS pp{i}_pet_size, pp{i}.is_pet_allowed AS pp{i}_is_pet_allowed'
+                from_clause += f' JOIN PetPolicy AS pp{i} ON au.company_name = pp{i}.company_name AND au.building_name = pp{i}.building_name'
+                pet_conditions.append(f'(pp{i}.pet_type = %s AND pp{i}.pet_size = %s)')
+                params.append(pet['pet_type'])
+                params.append(pet['pet_size'])
+            
+            if pet_conditions:
+                conditions.append(f'({' AND '.join(pet_conditions)})')
     
-        if conditions:
-            query += ' WHERE ' + ' AND '.join(conditions)
+    query = select_clause + from_clause
+    if conditions:
+        query += f' WHERE {' AND '.join(conditions)}'
 
     cursor.execute(query, params)
     units = cursor.fetchall()
     
     cursor.close()
+
+    # print('query: ', query, flush=True)
+    # print('units: ', units, flush=True)
     
-    return render_template('apartment_units.html', units=units, has_searched=bool(request.args))
+    return render_template('apartment_units.html', units=units, pet_count=pet_count, has_searched=bool(request.args))
 
 @apartment.route('/units/<unit_id>', methods=['GET'])
 def get_unit(unit_id):

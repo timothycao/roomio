@@ -21,6 +21,18 @@ def login():
 
         if data and bcrypt.check_password_hash(data['password'], password):
             session['username'] = username
+
+            cursor = conn.cursor()
+
+            pet_query = 'SELECT * FROM Pet WHERE username = %s'
+            cursor.execute(pet_query, (username))
+            pets = cursor.fetchall()
+
+            cursor.close()
+
+            if pets:
+                session['pets'] = pets
+
             return render_template('home.html') # placeholder: to be deleted once home route is defined
             # return redirect(url_for('home'))
         else:
