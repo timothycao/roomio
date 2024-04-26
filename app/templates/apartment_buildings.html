@@ -1,8 +1,28 @@
 <html>
   <head>
-    Apartment Buildings
+    <title>Apartment Buildings</title>
   </head>
   <body>
+    <h1>Apartment Buildings</h1>
+    <form method="GET" action="{{ url_for('apartment.get_buildings') }}">
+      <label for="company_name">Company Name:</label>
+      <input type="text" id="company_name" name="company_name" value="{{ request.args.get('company_name', '') }}">
+
+      <label for="building_name">Building Name:</label>
+      <input type="text" id="building_name" name="building_name" value="{{ request.args.get('building_name', '') }}">
+
+      <label for="city">City:</label>
+      <input type="text" id="city" name="city" value="{{ request.args.get('city', '') }}">
+
+      <label for="state">State:</label>
+      <input type="text" id="state" name="state" value="{{ request.args.get('state', '') }}">
+
+      <label for="zip_code">Zip:</label>
+      <input type="text" id="zip_code" name="zip_code" value="{{ request.args.get('zip_code', '') }}">
+
+      <input type="submit" value="Search">
+    </form>
+    {% if has_searched %}
     <table>
       <th>Company Name</th>
       <th>Building Name</th>
@@ -17,5 +37,6 @@
       </tr>
       {% endfor %}
     </table>
+    {% endif %}
   </body>
 </html>

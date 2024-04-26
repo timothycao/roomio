@@ -1,8 +1,40 @@
 <html>
   <head>
-    Apartment Units
+    <title>Apartment Units</title>
   </head>
   <body>
+    <h1>Apartment Units</h1>
+    <form method="GET" action="{{ url_for('apartment.get_units') }}">
+      <label for="company_name">Company Name:</label>
+      <input type="text" id="company_name" name="company_name" value="{{ request.args.get('company_name', '') }}">
+
+      <label for="building_name">Building Name:</label>
+      <input type="text" id="building_name" name="building_name" value="{{ request.args.get('building_name', '') }}">
+
+      <label for="city">City:</label>
+      <input type="text" id="city" name="city" value="{{ request.args.get('city', '') }}">
+
+      <label for="state">State:</label>
+      <input type="text" id="state" name="state" value="{{ request.args.get('state', '') }}">
+
+      <label for="zip_code">Zip:</label>
+      <input type="text" id="zip_code" name="zip_code" value="{{ request.args.get('zip_code', '') }}">
+
+      <label for="min_monthly_rent">Minimum Rent:</label>
+      <input type="number" id="min_monthly_rent" name="min_monthly_rent" value="{{ request.args.get('min_monthly_rent', '') }}">
+
+      <label for="max_monthly_rent">Maximum Rent:</label>
+      <input type="number" id="max_monthly_rent" name="max_monthly_rent" value="{{ request.args.get('max_monthly_rent', '') }}">
+
+      <label for="min_unit_size">Minimum Size:</label>
+      <input type="number" id="min_unit_size" name="min_unit_size" value="{{ request.args.get('min_unit_size', '') }}">
+
+      <label for="available_date">Available Date:</label>
+      <input type="date" id="available_date" name="available_date" value="{{ request.args.get('available_date', '') }}">
+
+      <input type="submit" value="Search">
+    </form>
+    {% if has_searched %}
     <table>
       <th>Building Name</th>
       <th>Unit Number</th>
@@ -19,5 +51,6 @@
       </tr>
       {% endfor %}
     </table>
+    {% endif %}
   </body>
 </html>

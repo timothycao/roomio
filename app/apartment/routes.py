@@ -7,27 +7,45 @@ def get_buildings():
 
     query = 'SELECT * FROM ApartmentBuilding'
     
+    conditions = []
+    params = []
+
     if request.args:
-        where_clauses = []
-        params = []
+        company_name = request.args.get('company_name')
+        building_name = request.args.get('building_name')
+        city = request.args.get('city')
+        state = request.args.get('state')
+        zip_code = request.args.get('zip_code')
 
-        for key, value in request.args.items():
-            where_clauses.append(f'{key}= %s')
-            params.append(value)
+        if company_name:
+            conditions.append('company_name LIKE %s')
+            params.append(f'%{company_name}%')
         
-        if where_clauses:
-            query += ' WHERE ' + ' AND '.join(where_clauses)
+        if building_name:
+            conditions.append('building_name LIKE %s')
+            params.append(f'%{building_name}%')
         
-        cursor.execute(query, params)
+        if city:
+            conditions.append('city = %s')
+            params.append(city)
+        
+        if state:
+            conditions.append('state = %s')
+            params.append(state)
+        
+        if zip_code:
+            conditions.append('zip_code = %s')
+            params.append(zip_code)
+        
+        if conditions:
+            query += ' WHERE ' + ' AND '.join(conditions)
     
-    else:
-        cursor.execute(query)
-
+    cursor.execute(query, params)
     buildings = cursor.fetchall()
     
     cursor.close()
     
-    return render_template('apartment_buildings.html', buildings=buildings)
+    return render_template('apartment_buildings.html', buildings=buildings, has_searched=bool(request.args))
 
 @apartment.route('/buildings/<company_name>/<building_name>', methods=['GET'])
 def get_building(company_name, building_name):
@@ -61,28 +79,72 @@ def get_units():
     cursor = conn.cursor()
 
     query = 'SELECT * FROM ApartmentUnit'
-    
+
+    conditions = []
+    params = []
+
     if request.args:
-        where_clauses = []
-        params = []
+        # unit attributes
+        min_monthly_rent = request.args.get('min_monthly_rent')
+        max_monthly_rent = request.args.get('max_monthly_rent')
+        min_unit_size = request.args.get('min_unit_size')
+        available_date = request.args.get('available_date')
+        company_name = request.args.get('company_name')
+        building_name = request.args.get('building_name')
 
-        for key, value in request.args.items():
-            where_clauses.append(f'{key}= %s')
-            params.append(value)
+        if min_monthly_rent:
+            conditions.append('monthly_rent >= %s')
+            params.append(min_monthly_rent)
         
-        if where_clauses:
-            query += ' WHERE ' + ' AND '.join(where_clauses)
+        if max_monthly_rent:
+            conditions.append('monthly_rent <= %s')
+            params.append(max_monthly_rent)
         
-        cursor.execute(query, params)
+        if min_unit_size:
+            conditions.append('unit_size >= %s')
+            params.append(min_unit_size)
+        
+        if available_date:
+            conditions.append('available_date = %s')
+            params.append(available_date)
+        
+        if company_name:
+            conditions.append('company_name LIKE %s')
+            params.append(f'%{company_name}%')
+        
+        if building_name:
+            conditions.append('building_name LIKE %s')
+            params.append(f'%{building_name}%')
+        
+        # building attributes
+        city = request.args.get('city')
+        state = request.args.get('state')
+        zip_code = request.args.get('zip_code')
+
+        if any([city, state, zip_code]):    # ApartmentUnit already contains company_name and building_name
+            query += ' NATURAL JOIN ApartmentBuilding'
+            
+            if city:
+                conditions.append('city = %s')
+                params.append(city)
+            
+            if state:
+                conditions.append('state = %s')
+                params.append(state)
+            
+            if zip_code:
+                conditions.append('zip_code = %s')
+                params.append(zip_code)
     
-    else:
-        cursor.execute(query)
+        if conditions:
+            query += ' WHERE ' + ' AND '.join(conditions)
 
+    cursor.execute(query, params)
     units = cursor.fetchall()
     
     cursor.close()
     
-    return render_template('apartment_units.html', units=units)
+    return render_template('apartment_units.html', units=units, has_searched=bool(request.args))
 
 @apartment.route('/units/<unit_id>', methods=['GET'])
 def get_unit(unit_id):
