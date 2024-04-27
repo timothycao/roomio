@@ -95,6 +95,26 @@
         {% endfor %}
       </table>
     {% endif %}
+    <h2>Interests</h2>
+    {% if username %}
+      {% if interests %}
+        <table>
+          <th>User</th>
+          <th>Roommates</th>
+          <th>Move-In Date</th>
+          {% for interest in interests %}
+            <tr>
+              <td>{{ interest.username }}</td>
+              <td>{{ interest.roommate_count }}</td>
+              <td>{{ interest.move_in_date }}</td>
+            </tr>
+          {% endfor %}
+        </table>
+      {% endif %}
+      <a href="#">Post interest</a>
+      {% else %}
+        <a href="{{ url_for('auth.login', next=request.url) }}">Login</a> to view and post interests
+    {% endif %}
   </body>
   <div style="margin-top: 1em;">
     <a href="{{ url_for('apartment.get_units') }}">Back to apartment units</a>

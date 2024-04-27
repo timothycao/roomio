@@ -227,9 +227,18 @@ def get_unit(unit_id):
     cursor.execute(get_building_amenities_query, (company_name, building_name))
     building_amenities = cursor.fetchall()
 
+    # Interests
+    username = ''
+    interests = []
+    if ('username' in session):
+        username = session['username']
+        get_interests_query = 'SELECT * FROM Interest WHERE unit_id = %s'
+        cursor.execute(get_interests_query, (unit_id))
+        interests = cursor.fetchall()
+
     cursor.close()
 
     if unit:
-        return render_template('apartment_unit.html', unit=unit, bedrooms=bedrooms, bathrooms=bathrooms, other_rooms=other_rooms, unit_amenities=unit_amenities, pet_policies=pet_policies, building_amenities=building_amenities)
+        return render_template('apartment_unit.html', unit=unit, bedrooms=bedrooms, bathrooms=bathrooms, other_rooms=other_rooms, unit_amenities=unit_amenities, pet_policies=pet_policies, building_amenities=building_amenities, interests=interests, username=username)
     else:
         return "Unit not found"

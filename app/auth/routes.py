@@ -5,8 +5,12 @@ from flask import request, render_template, redirect, url_for, session
 @decorators.guest_required
 def login():
     if request.method == 'GET':
+        next_url = request.args.get('next')
+        if next_url:
+            session['next_url'] = next_url
+
         return render_template('login.html', form_data={})
-    
+
     elif request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -33,8 +37,12 @@ def login():
             if pets:
                 session['pets'] = pets
 
-            return render_template('home.html') # placeholder: to be deleted once home route is defined
-            # return redirect(url_for('home'))
+            next_url = session.pop('next_url', None)
+            if next_url:
+                return redirect(next_url)
+            else:
+                return render_template('home.html') # placeholder: to be deleted once home route is defined
+                # return redirect(url_for('home'))
         else:
             error = 'Invalid username and/or password'
             return render_template('login.html', error=error, form_data=request.form)
