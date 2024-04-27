@@ -23,20 +23,22 @@
       <input type="submit" value="Search">
     </form>
     {% if has_searched %}
-    <table>
-      <th>Company Name</th>
-      <th>Building Name</th>
-      <th>Address</th>
-      <th>Year Built</th>
-      {% for building in buildings %}
-      <tr>
-        <td>{{ building.company_name }}</td>
-        <td><a href="{{ url_for('apartment.get_building', company_name=building.company_name, building_name=building.building_name) }}">{{ building.building_name }}</a></td>
-        <td>{{ building.street_number }} {{ building.street_name }}, {{ building.city }}, {{ building.state }} {{ building.zip_code }}</td>
-        <td>{{ building.year_built }}</td>
-      </tr>
-      {% endfor %}
-    </table>
+      <table>
+        <th>Company Name</th>
+        <th>Building Name</th>
+        <th>Address</th>
+        <th>Year Built</th>
+        <th>Units</th>
+        {% for building in buildings %}
+          <tr>
+            <td>{{ building.company_name }}</td>
+            <td><a href="{{ url_for('apartment.get_building', company_name=building.company_name, building_name=building.building_name) }}">{{ building.building_name }}</a></td>
+            <td>{{ building.street_number }} {{ building.street_name }}, {{ building.city }}, {{ building.state }} {{ building.zip_code }}</td>
+            <td>{{ building.year_built }}</td>
+            <td>{{ building.unit_count }}</td>
+          </tr>
+        {% endfor %}
+      </table>
     {% endif %}
   </body>
 </html>

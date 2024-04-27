@@ -27,13 +27,13 @@
       <th>Registration Fee</th>
       <th>Monthly Fee</th>
       {% for pet_policy in pet_policies %}
-      <tr>
-        <td>{{ pet_policy.pet_type }}</td>
-        <td>{{ pet_policy.pet_size }}</td>
-        <td>{{ 'Yes' if pet_policy.is_pet_allowed else 'No' }}</td>
-        <td>{{ pet_policy.pet_registration_fee }}</td>
-        <td>{{ pet_policy.pet_monthly_fee }}</td>
-      </tr>
+        <tr>
+          <td>{{ pet_policy.pet_type }}</td>
+          <td>{{ pet_policy.pet_size }}</td>
+          <td>{{ 'Yes' if pet_policy.is_pet_allowed else 'No' }}</td>
+          <td>{{ pet_policy.pet_registration_fee }}</td>
+          <td>{{ pet_policy.pet_monthly_fee }}</td>
+        </tr>
       {% endfor %}
     </table>
     <h2>Units</h2>
@@ -42,17 +42,21 @@
       <th>Rent</th>
       <th>Size</th>
       <th>Available Date</th>
+      <th>Bedrooms</th>
+      <th>Bathrooms</th>
       {% for unit in units %}
         <tr>
           <td><a href="{{ url_for('apartment.get_unit', unit_id=unit.unit_id) }}">{{ unit.unit_number }}</a></td>
           <td>${{ unit.monthly_rent }} </td>
           <td>{{ unit.unit_size }} ft²</td>
           <td>{{ unit.available_date }}</td>
+          <td>{{ unit.bedroom_count }}</td>
+          <td>{{ unit.bathroom_count }}</td>
         </tr>
       {% endfor %}
     </table>
   </body>
   <div style="margin-top: 1em;">
-    <a href="{{ url_for('apartment.get_buildings') }}">Go back</a>
+    <a href="{{ url_for('apartment.get_buildings') }}">Back to apartment buildings</a>
   </div>
 </html>
