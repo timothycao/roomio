@@ -1,0 +1,36 @@
+<div id="link">
+  <a href="javascript:void(0)" onclick="openForm()">Post interest</a>
+</div>
+<div id="form" style="display: none;">
+  <form action="{{ url_for('interests.register') }}" method="POST">
+    <label for="unit_id">Unit:</label>
+    <input type="number" id="unit_id" name="unit_id" value="{{ unit.unit_id }}" required readonly>
+
+    <label for="roommate_count">Roommates:</label>
+    <input type="number" id="roommate_count" name="roommate_count" required>
+
+    <label for="move_in_date">Move-In Date:</label>
+    <input type="date" id="move_in_date" name="move_in_date" required>
+
+    <input type="submit" value="Post">
+    <span class="close" onclick="closeForm()">&times;</span>
+    {% if error %}
+      <p class="error"><strong>Error:</strong> {{ error }}</p>
+    {% endif %}
+  </form>
+</div>
+
+<script>
+  function openForm() {
+    document.getElementById('form').style.display = 'block';
+    document.getElementById('link').style.display = 'none';
+  }
+
+  function closeForm() {
+    document.getElementById('form').style.display = 'none';
+    document.getElementById('link').style.display = 'block';
+
+    var form = document.querySelector('#form form');
+    form.reset();
+  }
+</script>

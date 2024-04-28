@@ -111,7 +111,9 @@
           {% endfor %}
         </table>
       {% endif %}
-      <a href="#">Post interest</a>
+      {% if not interests or not interests|selectattr('username', 'equalto', username)|list %}
+        {% include 'interests_register.html' %}
+      {% endif %}
       {% else %}
         <a href="{{ url_for('auth.login', next=request.url) }}">Login</a> to view and post interests
     {% endif %}
