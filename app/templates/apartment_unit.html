@@ -51,7 +51,7 @@
     </table>
     <h2>Rooms</h2>
     {% if bedrooms %}
-      <h3>Bedrooms</h3>
+      <h3>Bedrooms ({{ bedrooms|count }})</h3>
       <table>
         <th>Room</th>
         <th>Size</th>
@@ -66,7 +66,7 @@
       </table>
     {% endif %}
     {% if bathrooms %}
-      <h3>Bathrooms</h3>
+      <h3>Bathrooms ({{ bathrooms|count }})</h3>
       <table>
         <th>Room</th>
         <th>Size</th>
@@ -81,7 +81,7 @@
       </table>
     {% endif %}
     {% if other_rooms %}
-      <h3>Others</h3>
+      <h3>Others ({{ other_rooms|count }})</h3>
       <table>
         <th>Room</th>
         <th>Size</th>
