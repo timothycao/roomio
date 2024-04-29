@@ -32,6 +32,27 @@
       <label for="available_date">Available Date:</label>
       <input type="date" id="available_date" name="available_date" value="{{ request.args.get('available_date', '') }}">
 
+      <fieldset>
+        <legend>Building Amenities:</legend>
+        {% for building_amenity in building_amenities %}
+          <label>
+            <input type="checkbox" name="building_amenities" value="{{ building_amenity.amenity_name }}" {% if building_amenity.amenity_name in request.args.getlist('building_amenities') %} checked {% endif %}>
+            {{ building_amenity.amenity_name }}
+          </label>
+        {% endfor %}
+      </fieldset>
+
+      <fieldset>
+        <legend>Unit Amenities:</legend>
+        {% for unit_amenity in unit_amenities %}
+          <label>
+            <input type="checkbox" name="unit_amenities" value="{{ unit_amenity.amenity_name }}" {% if unit_amenity.amenity_name in request.args.getlist('unit_amenities') %} checked {% endif %}>
+            {{ unit_amenity.amenity_name }}
+          </label>
+        {% endfor %}
+      </fieldset>
+      
+      
       <input type="submit" value="Search">
     </form>
     {% if has_searched %}
@@ -43,6 +64,8 @@
         <th>Bedrooms</th>
         <th>Bathrooms</th>
         <th>Available Date</th>
+        <th>Building Amenities</th>
+        <th>Unit Amenities</th>
         {% if pet_count > 0 %}
           <th>Pet Policy</th>
         {% endif %}
@@ -55,6 +78,8 @@
             <td>{{ unit.bedroom_count }}</td>
             <td>{{ unit.bathroom_count }}</td>
             <td>{{ unit.available_date }}</td>
+            <td>{{ unit.building_amenities }}</td>
+            <td>{{ unit.unit_amenities }}</td>
             {% if pet_count > 0 %}
               <td>
                 {% for i in range(pet_count) %}
