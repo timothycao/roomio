@@ -1,8 +1,9 @@
-<html>
-  <head>
-    <title>Apartment Buildings</title>
-  </head>
-  <body>
+{% extends 'base.html' %}
+{% block head %}
+  <title>Apartment Buildings | Roomio</title>
+{% endblock %}
+{% block content %}
+  <div class="container">
     <h1>Apartment Buildings</h1>
     <form method="GET" action="{{ url_for('apartment.get_buildings') }}">
       <label for="company_name">Company Name:</label>
@@ -44,5 +45,5 @@
         <div>There are no matching results. Please adjust your search requirements.</div>
       {% endif %}
     {% endif %}
-  </body>
-</html>
+  </div>
+{% endblock %}

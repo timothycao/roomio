@@ -1,8 +1,9 @@
-<html>
-  <head>
-    <title>{{ building.building_name }}</title>
-  </head>
-  <body>
+{% extends 'base.html' %}
+{% block head %}
+  <title>{{ building.building_name }} | Roomio</title>
+{% endblock %}
+{% block content %}
+  <div class="container">
     <h1 style="margin-bottom: 0;">{{ building.building_name }}</h1>
     <h3 style="margin-top: 0;">{{ building.street_number }} {{ building.street_name }}, {{ building.city }}, {{ building.state }} {{ building.zip_code }}</h3>
     <h2>Building Facts</h2>
@@ -55,8 +56,8 @@
         </tr>
       {% endfor %}
     </table>
-  </body>
-  <div style="margin-top: 1em;">
-    <a href="{{ url_for('apartment.get_buildings') }}">Back to apartment buildings</a>
+    <div style="margin-top: 1em;">
+      <a href="{{ url_for('apartment.get_buildings') }}">Back to apartment buildings</a>
+    </div>
   </div>
-</html>
+{% endblock %}

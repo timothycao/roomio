@@ -1,8 +1,9 @@
-<html>
-  <head>
-    <title>{{ unit.street_number }} {{ unit.street_name }} #{{ unit.unit_number }}</title>
-  </head>
-  <body>
+{% extends 'base.html' %}
+{% block head %}
+  <title>{{ unit.street_number }} {{ unit.street_name }} #{{ unit.unit_number }} | Roomio</title>
+{% endblock %}
+{% block content %}
+  <div class="container">
     <h1>{{ unit.street_number }} {{ unit.street_name }} #{{ unit.unit_number }}</h1>
     <h2>About the Building</h2>
     <div><a href="{{ url_for('apartment.get_building', company_name=unit.company_name, building_name=unit.building_name) }}">{{ unit.building_name }}</a></div>
@@ -117,8 +118,8 @@
       {% else %}
         <a href="{{ url_for('auth.login', next=request.url) }}">Login</a> to view and post interests
     {% endif %}
-  </body>
-  <div style="margin-top: 1em;">
-    <a href="{{ url_for('apartment.get_units') }}">Back to apartment units</a>
+    <div style="margin-top: 1em;">
+      <a href="{{ url_for('apartment.get_units') }}">Back to apartment units</a>
+    </div>
   </div>
-</html>
+{% endblock %}

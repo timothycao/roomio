@@ -3,6 +3,10 @@ from flask import request, render_template, session
 
 @apartment.route('/buildings', methods=['GET'])
 def get_buildings():
+    username = ''
+    if 'username' in session:
+        username = session['username']
+
     cursor = conn.cursor()
 
     select_clause = 'SELECT company_name, building_name, street_number, street_name, city, state, zip_code, year_built, COUNT(*) AS unit_count'
@@ -48,10 +52,14 @@ def get_buildings():
     
     cursor.close()
     
-    return render_template('apartment_buildings.html', buildings=buildings, has_searched=bool(request.args))
+    return render_template('apartment_buildings.html', username=username, buildings=buildings, has_searched=bool(request.args))
 
 @apartment.route('/buildings/<company_name>/<building_name>', methods=['GET'])
 def get_building(company_name, building_name):
+    username = ''
+    if 'username' in session:
+        username = session['username']
+
     cursor = conn.cursor()
 
     get_building_query = 'SELECT * FROM ApartmentBuilding WHERE company_name = %s AND building_name = %s'
@@ -80,12 +88,20 @@ def get_building(company_name, building_name):
     cursor.close()
 
     if building:
-        return render_template('apartment_building.html', building=building, units=units, pet_policies=pet_policies, amenities=amenities)
+        return render_template('apartment_building.html', username=username, building=building, units=units, pet_policies=pet_policies, amenities=amenities)
     else:
         return "Building not found"
 
 @apartment.route('/units', methods=['GET'])
 def get_units():
+    username = ''
+    if 'username' in session:
+        username = session['username']
+
+    pets = []
+    if 'pets' in session:
+        pets = session['pets']
+
     cursor = conn.cursor()
 
     get_building_amenities_query = 'SELECT DISTINCT amenity_name FROM BuildingAmenity'
@@ -127,8 +143,6 @@ def get_units():
     conditions = []
     params = [f'bedroom%', f'bathroom%', ', ', ', ']
     group_by_clause = ' GROUP BY au.unit_id'
-
-    pet_count = 0
 
     if request.args:
         # unit attributes
@@ -185,7 +199,6 @@ def get_units():
                 params.append(zip_code)
 
         # amenities
-
         selected_building_amenities = request.args.getlist('building_amenities')
         if selected_building_amenities:
             condition = '(SELECT COUNT(DISTINCT amenity_name) FROM BuildingAmenity WHERE company_name = au.company_name AND building_name = au.building_name AND amenity_name IN ('
@@ -213,10 +226,9 @@ def get_units():
             params.append(len(selected_unit_amenities))
 
         # pet policies
-        if 'username' in session and 'pets' in session:
-            pet_count = len(session['pets'])
+        if username and pets:
             pet_conditions = []
-            for i, pet in enumerate(session['pets']):
+            for i, pet in enumerate(pets):
                 select_clause += f', pp{i}.pet_type AS pp{i}_pet_type, pp{i}.pet_size AS pp{i}_pet_size, pp{i}.is_pet_allowed AS pp{i}_is_pet_allowed'
                 from_clause += f' JOIN PetPolicy AS pp{i} ON au.company_name = pp{i}.company_name AND au.building_name = pp{i}.building_name'
                 pet_conditions.append(f'(pp{i}.pet_type = %s AND pp{i}.pet_size = %s)')
@@ -239,10 +251,14 @@ def get_units():
     # print('query: ', query, flush=True)
     # print('units: ', units, flush=True)
 
-    return render_template('apartment_units.html', units=units, pet_count=pet_count, building_amenities=building_amenities, unit_amenities=unit_amenities, has_searched=bool(request.args))
+    return render_template('apartment_units.html', username=username, pets=pets, units=units, building_amenities=building_amenities, unit_amenities=unit_amenities, has_searched=bool(request.args))
 
 @apartment.route('/units/<unit_id>', methods=['GET'])
 def get_unit(unit_id):
+    username = ''
+    if 'username' in session:
+        username = session['username']
+
     cursor = conn.cursor()
 
     get_unit_query = 'SELECT * FROM ApartmentUnit NATURAL JOIN ApartmentBuilding WHERE unit_id = %s'
@@ -281,10 +297,8 @@ def get_unit(unit_id):
     building_amenities = cursor.fetchall()
 
     # Interests
-    username = ''
     interests = []
-    if ('username' in session):
-        username = session['username']
+    if username:
         get_interests_query = 'SELECT * FROM Interest WHERE unit_id = %s'
         cursor.execute(get_interests_query, (unit_id))
         interests = cursor.fetchall()
@@ -292,6 +306,6 @@ def get_unit(unit_id):
     cursor.close()
 
     if unit:
-        return render_template('apartment_unit.html', unit=unit, bedrooms=bedrooms, bathrooms=bathrooms, other_rooms=other_rooms, unit_amenities=unit_amenities, pet_policies=pet_policies, building_amenities=building_amenities, interests=interests, username=username)
+        return render_template('apartment_unit.html', username=username, unit=unit, bedrooms=bedrooms, bathrooms=bathrooms, other_rooms=other_rooms, unit_amenities=unit_amenities, pet_policies=pet_policies, building_amenities=building_amenities, interests=interests)
     else:
         return "Unit not found"

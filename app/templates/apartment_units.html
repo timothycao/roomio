@@ -1,8 +1,9 @@
-<html>
-  <head>
-    <title>Apartment Units</title>
-  </head>
-  <body>
+{% extends 'base.html' %}
+{% block head %}
+  <title>Apartment Units | Roomio</title>
+{% endblock %}
+{% block content %}
+  <div class="container">
     <h1>Apartment Units</h1>
     <form method="GET" action="{{ url_for('apartment.get_units') }}">
       <label for="company_name">Company Name:</label>
@@ -66,7 +67,7 @@
           <th>Available Date</th>
           <th>Building Amenities</th>
           <th>Unit Amenities</th>
-          {% if pet_count > 0 %}
+          {% if pets %}
             <th>Pet Policy</th>
           {% endif %}
           {% for unit in units %}
@@ -80,9 +81,9 @@
               <td>{{ unit.available_date }}</td>
               <td>{{ unit.building_amenities }}</td>
               <td>{{ unit.unit_amenities }}</td>
-              {% if pet_count > 0 %}
+              {% if pets %}
                 <td>
-                  {% for i in range(pet_count) %}
+                  {% for i in range(pets|count) %}
                     {{ unit['pp' + (i|string) + '_pet_size'] }} {{ unit['pp' + (i|string) + '_pet_type'] }}s {{ 'allowed' if unit['pp' + (i|string) + '_is_pet_allowed'] else 'not allowed' }}<br>
                   {% endfor %}
                 </td>
@@ -94,5 +95,5 @@
         <div>There are no matching results. Please adjust your search requirements.</div>
       {% endif %}
     {% endif %}
-  </body>
-</html>
+  </div>
+{% endblock %}

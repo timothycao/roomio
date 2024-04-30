@@ -1,8 +1,10 @@
-<html>
-  <head>
-    Pets
-  </head>
-  <body>
+{% extends 'base.html' %}
+{% block head %}
+  <title>Pets | Roomio</title>
+{% endblock %}
+{% block content %}
+  <div class="container">
+    <h1>Pets</h1>
     <table>
       <th>Name</th>
       <th>Type</th>
@@ -18,5 +20,5 @@
     <a href="{{ url_for('pets.register') }}">
       <button>Register a pet</button>
     </a>
-  </body>
-</html>
+  </div>
+{% endblock %}

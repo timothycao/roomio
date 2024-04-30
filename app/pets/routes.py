@@ -8,7 +8,7 @@ def register():
     username = session['username']
 
     if request.method == 'GET':
-        return render_template('pets_register.html', form_data={})
+        return render_template('pets_register.html', form_data={}, username=username)
     
     elif request.method == 'POST':
         pet_name = request.form['pet_name']
@@ -23,7 +23,7 @@ def register():
 
         if pet:
             error = f"You have already registered a {pet_type} named {pet_name}."
-            return render_template('pets_register.html', error=error, form_data=request.form)
+            return render_template('pets_register.html', error=error, form_data=request.form, username=username)
         else:
             insert_pet_query = 'INSERT INTO Pet (pet_name, pet_type, pet_size, username) VALUES (%s, %s, %s, %s)'
             cursor.execute(insert_pet_query, (pet_name, pet_type, pet_size, username))
@@ -87,7 +87,7 @@ def update(pet_name, pet_type):
 
     if request.method == 'GET':
         if current_pet:
-            return render_template('pets_update.html', username=username, form_data={}, pet=current_pet)
+            return render_template('pets_update.html', form_data={}, username=username, pet=current_pet)
         else:
             return "Pet not found"
     
@@ -104,7 +104,7 @@ def update(pet_name, pet_type):
 
         if pet:
             error = f"You already have another {new_pet_type} named {new_pet_name}."
-            return render_template('pets_update.html', error=error, form_data=request.form, pet=current_pet)
+            return render_template('pets_update.html', error=error, form_data=request.form, username=username, pet=current_pet)
         else:
             update_pet_query = 'UPDATE Pet SET pet_name = %s, pet_type = %s, pet_size = %s WHERE pet_name = %s AND pet_type = %s AND username = %s'
             cursor.execute(update_pet_query, (new_pet_name, new_pet_type, new_pet_size, pet_name, pet_type, username))

@@ -1,8 +1,10 @@
-<html>
-  <head>
-    Pet
-  </head>
-  <body>
+{% extends 'base.html' %}
+{% block head %}
+  <title>{{ pet.pet_name }} | Roomio</title>
+{% endblock %}
+{% block content %}
+  <div class="container">
+    <h1>{{ pet.pet_name }}</h1>
     <form style="margin-bottom: 0;">
       <label for="pet_name">Pet Name:</label><br />
       <input type="text" id="pet_name" name="pet_name" value="{{ pet.pet_name }}" disabled /><br />
@@ -14,8 +16,8 @@
     <a href="{{ url_for('pets.update', pet_name=pet.pet_name, pet_type=pet.pet_type) }}">
       <button style="margin-top: 0;">Update pet</button>
     </a>
-  </body>
-  <div style="margin-top: 1em;">
-    <a href="{{ url_for('pets.get_all') }}">Go back</a>
+    <div style="margin-top: 1em;">
+      <a href="{{ url_for('pets.get_all') }}">Go back</a>
+    </div>
   </div>
-</html>
+{% endblock %}
