@@ -299,13 +299,56 @@ def get_unit(unit_id):
     # Interests
     interests = []
     if username:
-        get_interests_query = 'SELECT * FROM Interest WHERE unit_id = %s'
-        cursor.execute(get_interests_query, (unit_id))
+        with_clause = (
+            'WITH UserInfo AS ('
+                'SELECT u.username, u.first_name, u.last_name, '
+                'CASE u.gender WHEN 0 THEN %s WHEN 1 THEN %s ELSE %s END AS gender, '
+                'TIMESTAMPDIFF(YEAR, u.date_of_birth, CURDATE()) AS age, '
+                'GROUP_CONCAT(DISTINCT email_address SEPARATOR %s) AS emails, '
+                'GROUP_CONCAT(DISTINCT phone_number SEPARATOR %s) AS phone_numbers '
+                'FROM User u NATURAL JOIN UserEmail ue NATURAL JOIN UserPhone up '
+                'GROUP BY u.username'
+            ') '
+        )
+        select_clause = (
+            'SELECT i.username AS username, '
+            'ui.first_name AS first_name, '
+            'ui.last_name AS last_name, '
+            'ui.gender AS gender, '
+            'ui.age AS age, '
+            'ui.emails AS emails, '
+            'ui.phone_numbers AS phone_numbers, '
+            'i.roommate_count AS roommate_count, '
+            'i.move_in_date AS move_in_date '
+        )
+        from_clause = 'FROM Interest AS i NATURAL JOIN UserInfo AS ui '
+        where_clause = 'WHERE unit_id = %s'
+        params = ['Male', 'Female', 'Other', ', ', ', ', unit_id]
+
+        if request.args:
+            roommate_count = request.args.get('interests_roommate_count')
+            min_move_in_date = request.args.get('interests_min_move_in_date')
+            max_move_in_date = request.args.get('interests_max_move_in_date')
+
+            if roommate_count:
+                where_clause += ' AND roommate_count = %s'
+                params.append(roommate_count)
+
+            if min_move_in_date:
+                where_clause += ' AND move_in_date >= %s'
+                params.append(min_move_in_date)
+
+            if max_move_in_date:
+                where_clause += ' AND move_in_date <= %s'
+                params.append(max_move_in_date)
+        
+        get_interests_query = with_clause + select_clause + from_clause + where_clause
+        cursor.execute(get_interests_query, params)
         interests = cursor.fetchall()
 
     cursor.close()
 
     if unit:
-        return render_template('apartment_unit.html', username=username, unit=unit, bedrooms=bedrooms, bathrooms=bathrooms, other_rooms=other_rooms, unit_amenities=unit_amenities, pet_policies=pet_policies, building_amenities=building_amenities, interests=interests)
+        return render_template('apartment_unit.html', username=username, unit=unit, bedrooms=bedrooms, bathrooms=bathrooms, other_rooms=other_rooms, unit_amenities=unit_amenities, pet_policies=pet_policies, building_amenities=building_amenities, interests=interests, has_searched=bool(request.args))
     else:
         return "Unit not found"

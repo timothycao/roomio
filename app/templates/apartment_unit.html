@@ -98,6 +98,18 @@
     {% endif %}
     <h2>Interests</h2>
     {% if username %}
+      <form method="GET" action="{{ url_for('apartment.get_unit', unit_id=unit.unit_id) }}">
+        <label for="interests_roommate_count">Roommates:</label>
+        <input type="number" id="interests_roommate_count" name="interests_roommate_count" value="{{ request.args.get('interests_roommate_count', '') }}">
+
+        <label for="interests_min_move_in_date">Move-In on or after:</label>
+        <input type="date" id="interests_min_move_in_date" name="interests_min_move_in_date" value="{{ request.args.get('interests_min_move_in_date', '') }}">
+
+        <label for="interests_max_move_in_date">Move-In on or before:</label>
+        <input type="date" id="interests_max_move_in_date" name="interests_max_move_in_date" value="{{ request.args.get('interests_max_move_in_date', '') }}">
+
+        <input type="submit" value="Search">
+      </form>
       {% if interests %}
         <table>
           <th>User</th>
@@ -105,14 +117,21 @@
           <th>Move-In Date</th>
           {% for interest in interests %}
             <tr>
-              <td>{{ interest.username }}</td>
+              <td class="btn" data-bs-toggle="collapse" href="#interest{{ loop.index }}">{{ interest.username }}</td>
               <td>{{ interest.roommate_count }}</td>
               <td>{{ interest.move_in_date }}</td>
+              <td class="collapse" id="interest{{ loop.index }}">
+                Name: {{ interest.first_name}} {{ interest.last_name }},
+                Age: {{ interest.age }},
+                Gender: {{ interest.gender }},
+                Email: {{ interest.emails }},
+                Phone: {{ interest.phone_numbers }}
+              </td>
             </tr>
           {% endfor %}
         </table>
       {% endif %}
-      {% if not interests or not interests|selectattr('username', 'equalto', username)|list %}
+      {% if not has_searched and not interests|selectattr('username', 'equalto', username)|list %}
         {% include 'interests_register.html' %}
       {% endif %}
       {% else %}
