@@ -1,18 +1,37 @@
-<html>
-  <head>
-    Login
-  </head>
-  <body>
-    <form action="login" method="POST">
-      <label for="username">Username:</label><br />
-      <input type="text" id="username" name="username" value="{{ form_data.get('username', '') }}" required /><br />
-      <label for="password">Password:</label><br />
-      <input type="password" id="password" name="password" required /><br />
-      <input type="submit" value="Login" />
-      {% if error %}
-      <p class="error"><strong>Error:</strong> {{error}}</p>
-      {% endif %}
-    </form>
-    <a href="/">Go back</a>
-  </body>
-</html>
+{% extends 'base.html' %}
+{% block head %}
+  <title>Login | Roomio</title>
+{% endblock %}
+{% block content %}
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+        <div class="card" style="border-radius: 1rem;">
+          <div class="card-body text-center p-5">
+            <h1 class="mb-5">Login</h1>
+            <form action="login" method="POST">
+              <div class="form-floating mb-4">
+                <input type="text" class="form-control" id="username" name="username" value="{{ form_data.get('username', '') }}" placeholder="Username" required />
+                <label class="form-label" for="username">Username</label>
+              </div>
+              <div class="form-floating mb-4">
+                <input type="password" class="form-control" id="password" name="password" placeholder="Password" required />
+                <label class="form-label" for="password">Password</label>
+              </div>
+              <button class="btn btn-primary btn-lg form-control mb-4" type="submit">Login</button>
+              <div style="height: 2em;">
+                {% if error %}
+                  <p class="error" style="color: red;">{{error}}</p>
+                {% endif %}
+              </div>
+            </form>
+            <hr class="mb-4">
+            <div>
+              <p>Don't have an account? <a href="{{ url_for('auth.register') }}">Register</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

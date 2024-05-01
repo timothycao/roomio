@@ -1,35 +1,85 @@
-<html>
-  <head>
-    Register
-  </head>
-  <body>
-    <form action="register" method="POST">
-      <label for="username">Username:</label><br />
-      <input type="text" id="username" name="username" value="{{ form_data.get('username', '') }}" required /><br />
-      <label for="first_name">First Name:</label><br />
-      <input type="text" id="first_name" name="first_name" value="{{ form_data.get('first_name', '') }}" required /><br />
-      <label for="last_name">Last Name:</label><br />
-      <input type="text" id="last_name" name="last_name" value="{{ form_data.get('last_name', '') }}" required /><br />
-      <label for="date_of_birth">Date of Birth:</label><br />
-      <input type="date" id="date_of_birth" name="date_of_birth" value="{{ form_data.get('date_of_birth', '') }}" required /><br />
-      <label for="gender">Gender:</label><br />
-      <select id="gender" name="gender" required>
-        <option value="" disabled selected>Please select</option>
-        <option id="male" value="0" {% if form_data.get('gender', '') == '0' %} selected {% endif %}>Male</option>
-        <option id="female" value="1" {% if form_data.get('gender', '') == '1' %} selected {% endif %}>Female</option>
-      </select>
-      <br />
-	  <label for="email_address">Email Address:</label><br />
-	  <input type="email" id="email_address" name="email_address" value="{{ form_data.get('email_address', '') }}" required /><br />
-	  <label for="phone_number">Phone Number:</label><br />
-	  <input type="text" id="phone_number" name="phone_number" value="{{ form_data.get('phone_number', '') }}" required /><br />
-      <label for="password">Password:</label><br />
-      <input type="password" id="password" name="password" required /><br />
-      <input type="submit" value="Register" />
-      {% if error %}
-      <p class="error"><strong>Error:</strong> {{error}}</p>
-      {% endif %}
-    </form>
-    <a href="/">Go back</a>
-  </body>
-</html>
+{% extends 'base.html' %}
+{% block head %}
+  <title>Register | Roomio</title>
+{% endblock %}
+{% block content %}
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-10 col-lg-8 col-xl-7">
+        <div class="card" style="border-radius: 1rem;">
+          <div class="card-body text-center p-5">
+            <h1 class="mb-5">Register</h1>
+            <form action="register" method="POST">
+              <div class="form-floating mb-4">
+                <input type="text" class="form-control" id="username" name="username" value="{{ form_data.get('username', '') }}" placeholder="Username" required />
+                <label class="form-label" for="username">Username</label>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-floating mb-4">
+                    <input type="text" class="form-control" id="first_name" name="first_name" value="{{ form_data.get('first_name', '') }}" placeholder="First Name" required />
+                    <label class="form-label" for="first_name">First Name</label>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-floating mb-4">
+                    <input type="text" class="form-control" id="last_name" name="last_name" value="{{ form_data.get('last_name', '') }}" placeholder="Last Name" required />
+                    <label class="form-label" for="last_name">Last Name</label>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-floating mb-4">
+                    <input type="date" class="form-control" id="date_of_birth" name="date_of_birth" value="{{ form_data.get('date_of_birth', '') }}" placeholder="Date of Birth" required />
+                    <label class="form-label" for="date_of_birth">Date of Birth</label>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-floating mb-4">
+                    <select class="form-select" id="gender" name="gender" required>
+                      <option value="" disabled selected>Please select</option>
+                      <option id="male" value="0" {% if form_data.get('gender', '') == '0' %} selected {% endif %}>Male</option>
+                      <option id="female" value="1" {% if form_data.get('gender', '') == '1' %} selected {% endif %}>Female</option>
+                      <option id="other" value="2" {% if form_data.get('gender', '') == '2' %} selected {% endif %}>Other</option>
+                    </select>
+                    <label class="form-label" for="gender">Gender</label>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-floating mb-4">
+                    <input type="email" class="form-control" id="email_address" name="email_address" value="{{ form_data.get('email_address', '') }}" placeholder="Email Address" required />
+                    <label class="form-label" for="email_address">Email Address</label>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-floating mb-4">
+                    <input type="text" class="form-control" id="phone_number" name="phone_number" value="{{ form_data.get('phone_number', '') }}" placeholder="Phone Number" required />
+                    <label class="form-label" for="phone_number">Phone Number</label>
+                  </div>
+                </div>
+              </div>
+              <div class="form-floating mb-4">
+                <input type="password" class="form-control" id="password" name="password" placeholder="Password" required />
+                <label class="form-label" for="password">Password</label>
+              </div>
+              <button class="btn btn-primary btn-lg form-control mb-4" type="submit">Register</button>
+              <div style="height: 2em;">
+                {% if error %}
+                  <p class="error" style="color: red;">{{error}}</p>
+                {% endif %}
+              </div>
+            </form>
+            <hr class="mb-4">
+            <div>
+              <p>Already have an account? <a href="{{ url_for('auth.login') }}">Login</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+{% endblock %}
