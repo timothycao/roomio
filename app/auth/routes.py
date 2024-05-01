@@ -41,8 +41,7 @@ def login():
             if next_url:
                 return redirect(next_url)
             else:
-                return render_template('home.html') # placeholder: to be deleted once home route is defined
-                # return redirect(url_for('home'))
+                return redirect(url_for('home'))
         else:
             error = 'Invalid username and/or password'
             return render_template('login.html', error=error, form_data=request.form)
